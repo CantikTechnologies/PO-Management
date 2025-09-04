@@ -1,4 +1,6 @@
-<?php include 'db.php'; ?>
+<?php 
+include 'db.php'; 
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,22 +33,26 @@
       <tbody>
       <?php
       $res = $conn->query("SELECT * FROM so_form");
-      while ($r = $res->fetch_assoc()) {
+      if ($res && $res->num_rows > 0) {
+        while ($r = $res->fetch_assoc()) {
           echo "<tr>";
-          echo "<td>{$r['cost_center']}</td>";
-          echo "<td>{$r['customer_po_no']}</td>";
-          echo "<td>{$r['customer_po_value']}</td>";
-          echo "<td>{$r['billed_till_date']}</td>";
-          echo "<td>{$r['remaining_balance_in_po']}</td>";
-          echo "<td>{$r['vendor_name']}</td>";
-          echo "<td>{$r['vendor_po_no']}</td>";
-          echo "<td>{$r['vendor_po_value']}</td>";
-          echo "<td>{$r['vendor_invoicing_till_date']}</td>";
-          echo "<td>{$r['remaining_balance_in_vendor_po']}</td>";
-          echo "<td>{$r['sale_margin_till_date']}</td>";
-          echo "<td>{$r['target_gm']}</td>";
-          echo "<td>{$r['variance_in_gm']}</td>";
+          echo "<td>".htmlspecialchars($r['cost_center'])."</td>";
+          echo "<td>".htmlspecialchars($r['customer_po_no'])."</td>";
+          echo "<td>".number_format($r['customer_po_value'],2)."</td>";
+          echo "<td>".number_format($r['billed_till_date'],2)."</td>";
+          echo "<td>".number_format($r['remaining_balance_po'],2)."</td>";
+          echo "<td>".htmlspecialchars($r['vendor_name'])."</td>";
+          echo "<td>".htmlspecialchars($r['vendor_po_no'])."</td>";
+          echo "<td>".number_format($r['vendor_po_value'],2)."</td>";
+          echo "<td>".number_format($r['vendor_invoicing_till_date'],2)."</td>";
+          echo "<td>".number_format($r['remaining_vendor_balance'],2)."</td>";
+          echo "<td>".number_format($r['sale_margin_till_date'],2)."%</td>";
+          echo "<td>".number_format($r['target_gm'],2)."%</td>";
+          echo "<td>".number_format($r['variance_in_gm'],2)."%</td>";
           echo "</tr>";
+        }
+      } else {
+        echo "<tr><td colspan='13'>No records found</td></tr>";
       }
       ?>
       </tbody>
