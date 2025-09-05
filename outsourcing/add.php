@@ -26,12 +26,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vendor_invoice_no = $_POST['vendor_invoice_no'];
     $vendor_invoice_date = $_POST['vendor_invoice_date'] ?: null;
     $vendor_invoice_value = $_POST['vendor_invoice_value'] ?: 0;
-    $payment_status_from_ntt = $_POST['payment_status_from_ntt'] ?? '';
     $payment_date = $_POST['payment_date'] ?: null;
     $remarks = $_POST['remarks'];
+    // Check if column payment_status_from_ntt exists
+    $colExists = false;
+    if ($resCol = $conn->query("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'outsourcing_details' AND COLUMN_NAME = 'payment_status_from_ntt'")) {
+      $colExists = $resCol->num_rows > 0;
+      $resCol->free();
+    }
 
-    $stmt = $conn->prepare("INSERT INTO outsourcing_details (po_id, cantik_po_no, cantik_po_date, cantik_po_value, vendor_invoice_no, vendor_invoice_date, vendor_invoice_value, payment_status_from_ntt, payment_date, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issdsdssss", $po_id, $cantik_po_no, $cantik_po_date, $cantik_po_value, $vendor_invoice_no, $vendor_invoice_date, $vendor_invoice_value, $payment_status_from_ntt, $payment_date, $remarks);
+    if ($colExists) {
+      $payment_status_from_ntt = $_POST['payment_status_from_ntt'] ?? '';
+      $stmt = $conn->prepare("INSERT INTO outsourcing_details (po_id, cantik_po_no, cantik_po_date, cantik_po_value, vendor_invoice_no, vendor_invoice_date, vendor_invoice_value, payment_status_from_ntt, payment_date, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      $stmt->bind_param("issdsdssss", $po_id, $cantik_po_no, $cantik_po_date, $cantik_po_value, $vendor_invoice_no, $vendor_invoice_date, $vendor_invoice_value, $payment_status_from_ntt, $payment_date, $remarks);
+    } else {
+      $stmt = $conn->prepare("INSERT INTO outsourcing_details (po_id, cantik_po_no, cantik_po_date, cantik_po_value, vendor_invoice_no, vendor_invoice_date, vendor_invoice_value, payment_date, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      $stmt->bind_param("issdsdsss", $po_id, $cantik_po_no, $cantik_po_date, $cantik_po_value, $vendor_invoice_no, $vendor_invoice_date, $vendor_invoice_value, $payment_date, $remarks);
+    }
 
     if ($stmt->execute()) {
       header('Location: list.php');
