@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
 <body>
   <div class="form-container">
     <div class="form-header">
-      <img src="../2dashboard-app/cantik_logo.png" alt="Cantik Logo" class="logo">
+      <img src="cantik_logo.png" alt="Cantik Logo" class="logo">
       <h2>Create Your Account</h2>
       <p>Join us today! It's quick and easy.</p>
     </div>

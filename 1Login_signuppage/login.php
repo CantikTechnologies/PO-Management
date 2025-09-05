@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['login'])) {
 <body>
   <div class="form-container">
     <div class="form-header">
-      <img src="../2dashboard-app/cantik_logo.png" alt="Cantik Logo" class="logo">
+      <img src="cantik_logo.png" alt="Cantik Logo" class="logo">
       <h2>Welcome Back!</h2>
       <p>Please enter your credentials to log in.</p>
     </div>
